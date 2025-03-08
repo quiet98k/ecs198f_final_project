@@ -58,6 +58,7 @@ class ChessLogic:
         
         return self.board[row_index][col_index]
     
+    # get the array of valid ending position
     def get_valid_end_pos(self, pos: str, piece: str) -> List[str]:
         row_index, col_index = self.grid2array(pos)
         valid_moves_in_index = []
@@ -75,19 +76,18 @@ class ChessLogic:
                     # can move twice
                     if(row_index == 6): 
                         pos_at_front_twice = self.array2grid(row_index-2, col_index)
-                        if pos_at_front_twice != '-1':
+                        if pos_at_front_twice != "-1":
                             valid_moves.append(pos_at_front_twice)
             # now check diagonally left and right
             pos_at_left_diag = self.array2grid(row_index-1, col_index-1)
-            if pos_at_left_diag != '-1' and self.get_piece(pos_at_left_diag).islower():
+            if pos_at_left_diag != "-1" and self.get_piece(pos_at_left_diag).islower():
                 valid_moves.append(pos_at_left_diag)
             pos_at_right_diag = self.array2grid(row_index-1, col_index+1)
-            if pos_at_right_diag != '-1' and self.get_piece(pos_at_right_diag).islower():
+            if pos_at_right_diag != "-1" and self.get_piece(pos_at_right_diag).islower():
                 valid_moves.append(pos_at_right_diag)
 
         elif piece == "R":
             # Implement logic for white rook
-            
             for i in range(row_index-1, -1, -1):
                 pos_up = self.array2grid(i, col_index)
                 piece_up = self.get_piece(pos_up)
@@ -98,7 +98,6 @@ class ChessLogic:
                     break
                 else:
                     break
-
             for j in range(row_index+1, 8):
                 pos_down = self.array2grid(j, col_index)
                 piece_down = self.get_piece(pos_down)
@@ -109,7 +108,6 @@ class ChessLogic:
                     break
                 else:
                     break
-
             for k in range(col_index-1, -1, -1):
                 pos_left = self.array2grid(row_index, k)
                 piece_left = self.get_piece(pos_left)
@@ -120,7 +118,6 @@ class ChessLogic:
                     break
                 else:
                     break
-
             for l in range(col_index+1, 8):
                 pos_right = self.array2grid(row_index, l)
                 piece_right = self.get_piece(pos_right)
@@ -133,16 +130,170 @@ class ChessLogic:
                     break
         
         elif piece == "N":
-            pass  # Implement logic for white knight
+            # Implement logic for white knight
+            if self.array2grid(row_index - 2, col_index - 1).islower():
+                valid_moves.append(self.array2grid(row_index - 2, col_index - 1))
+            if self.array2grid(row_index - 2, col_index + 1).islower():
+                valid_moves.append(self.array2grid(row_index - 2, col_index + 1))
+            if self.array2grid(row_index - 1, col_index + 2).islower():
+                valid_moves.append(self.array2grid(row_index - 1, col_index + 2))
+            if self.array2grid(row_index + 1, col_index + 2).islower():
+                valid_moves.append(self.array2grid(row_index + 1, col_index + 2))
+            if self.array2grid(row_index + 2, col_index + 1).islower():
+                valid_moves.append(self.array2grid(row_index + 2, col_index + 1))
+            if self.array2grid(row_index + 2, col_index - 1).islower():
+                valid_moves.append(self.array2grid(row_index + 2, col_index - 1))
+            if self.array2grid(row_index + 1, col_index - 2).islower():
+                valid_moves.append(self.array2grid(row_index + 1, col_index - 2))
+            if self.array2grid(row_index + 1, col_index - 2).islower():
+                valid_moves.append(self.array2grid(row_index + 1, col_index - 2))
         
         elif piece == "B":
-            pass  # Implement logic for white bishop
+            # Implement logic for white bishop
+            for i in range(1, 8):
+                pos_up_right = self.array2grid(row_index - i, col_index + i)
+                if pos_up_right == "-1":
+                    break
+                piece_up_right = self.get_piece(pos_up_right)
+                if piece_up_right == '':
+                    valid_moves.append(pos_up_right)
+                elif piece_up_right.islower():
+                    valid_moves.append(pos_up_right)
+                    break
+                else:
+                    break
+            for i in range(1, 8):
+                pos_up_left = self.array2grid(row_index - i, col_index - i)
+                if pos_up_left == "-1":
+                    break
+                piece_up_left = self.get_piece(pos_up_left)
+                if piece_up_left == '':
+                    valid_moves.append(pos_up_left)
+                elif piece_up_left.islower():
+                    valid_moves.append(pos_up_left)
+                    break
+                else:
+                    break
+            for i in range(1, 8):
+                pos_down_right = self.array2grid(row_index + i, col_index + i)
+                if pos_down_right == "-1":
+                    break
+                piece_down_right = self.get_piece(pos_down_right)
+                if piece_down_right == '':
+                    valid_moves.append(pos_down_right)
+                elif piece_down_right.islower():
+                    valid_moves.append(pos_down_right)
+                    break
+                else:
+                    break
+            for i in range(1, 8):
+                pos_down_left = self.array2grid(row_index + i, col_index - i)
+                if pos_down_left == "-1":
+                    break
+                piece_down_left = self.get_piece(pos_down_left)
+                if piece_down_left == '':
+                    valid_moves.append(pos_down_left)
+                elif piece_down_left.islower():
+                    valid_moves.append(pos_down_left)
+                    break
+                else:
+                    break
+                
         
         elif piece == "Q":
-            pass  # Implement logic for white queen
+            # Implement logic for white queen
+            for i in range(row_index-1, -1, -1):
+                pos_up = self.array2grid(i, col_index)
+                piece_up = self.get_piece(pos_up)
+                if piece_up == '':
+                    valid_moves.append(pos_up)
+                elif piece_up.islower():
+                    valid_moves.append(pos_up)
+                    break
+                else:
+                    break
+            for j in range(row_index+1, 8):
+                pos_down = self.array2grid(j, col_index)
+                piece_down = self.get_piece(pos_down)
+                if piece_down == '':
+                    valid_moves.append(pos_down)
+                elif piece_down.islower():
+                    valid_moves.append(pos_down)
+                    break
+                else:
+                    break
+            for k in range(col_index-1, -1, -1):
+                pos_left = self.array2grid(row_index, k)
+                piece_left = self.get_piece(pos_left)
+                if piece_left == '':
+                    valid_moves.append(pos_left)
+                elif piece_left.islower():
+                    valid_moves.append(pos_left)
+                    break
+                else:
+                    break
+            for l in range(col_index+1, 8):
+                pos_right = self.array2grid(row_index, l)
+                piece_right = self.get_piece(pos_right)
+                if piece_right == '':
+                    valid_moves.append(pos_right)
+                elif piece_right.islower():
+                    valid_moves.append(pos_right)
+                    break
+                else:
+                    break
+            for i in range(1, 8):
+                pos_up_right = self.array2grid(row_index - i, col_index + i)
+                if pos_up_right == "-1":
+                    break
+                piece_up_right = self.get_piece(pos_up_right)
+                if piece_up_right == '':
+                    valid_moves.append(pos_up_right)
+                elif piece_up_right.islower():
+                    valid_moves.append(pos_up_right)
+                    break
+                else:
+                    break
+            for i in range(1, 8):
+                pos_up_left = self.array2grid(row_index - i, col_index - i)
+                if pos_up_left == "-1":
+                    break
+                piece_up_left = self.get_piece(pos_up_left)
+                if piece_up_left == '':
+                    valid_moves.append(pos_up_left)
+                elif piece_up_left.islower():
+                    valid_moves.append(pos_up_left)
+                    break
+                else:
+                    break
+            for i in range(1, 8):
+                pos_down_right = self.array2grid(row_index + i, col_index + i)
+                if pos_down_right == "-1":
+                    break
+                piece_down_right = self.get_piece(pos_down_right)
+                if piece_down_right == '':
+                    valid_moves.append(pos_down_right)
+                elif piece_down_right.islower():
+                    valid_moves.append(pos_down_right)
+                    break
+                else:
+                    break
+            for i in range(1, 8):
+                pos_down_left = self.array2grid(row_index + i, col_index - i)
+                if pos_down_left == "-1":
+                    break
+                piece_down_left = self.get_piece(pos_down_left)
+                if piece_down_left == '':
+                    valid_moves.append(pos_down_left)
+                elif piece_down_left.islower():
+                    valid_moves.append(pos_down_left)
+                    break
+                else:
+                    break
         
         elif piece == "K":
             pass  # Implement logic for white king
+            
         
         elif piece == "p":
             pass  # Implement logic for black pawn
@@ -157,14 +308,14 @@ class ChessLogic:
                     # can move twice
                     if(row_index == 1): 
                         pos_at_front_twice = self.array2grid(row_index+2, col_index)
-                        if pos_at_front_twice != '-1':
+                        if pos_at_front_twice != "-1":
                             valid_moves.append(pos_at_front_twice)
             # now check diagonally left and right
             pos_at_left_diag = self.array2grid(row_index+1, col_index-1)
-            if pos_at_left_diag != '-1' and self.get_piece(pos_at_left_diag).isupper():
+            if pos_at_left_diag != "-1" and self.get_piece(pos_at_left_diag).isupper():
                 valid_moves.append(pos_at_left_diag)
             pos_at_right_diag = self.array2grid(row_index+1, col_index+1)
-            if pos_at_right_diag != '-1' and self.get_piece(pos_at_right_diag).isupper():
+            if pos_at_right_diag != "-1" and self.get_piece(pos_at_right_diag).isupper():
                 valid_moves.append(pos_at_right_diag)
         
         elif piece == "r":
@@ -179,7 +330,6 @@ class ChessLogic:
                     break
                 else:
                     break
-
             for j in range(row_index+1, 8):
                 pos_down = self.array2grid(j, col_index)
                 piece_down = self.get_piece(pos_down)
@@ -190,7 +340,6 @@ class ChessLogic:
                     break
                 else:
                     break
-
             for k in range(col_index-1, -1, -1):
                 pos_left = self.array2grid(row_index, k)
                 piece_left = self.get_piece(pos_left)
@@ -201,7 +350,6 @@ class ChessLogic:
                     break
                 else:
                     break
-
             for l in range(col_index+1, 8):
                 pos_right = self.array2grid(row_index, l)
                 piece_right = self.get_piece(pos_right)
@@ -214,13 +362,165 @@ class ChessLogic:
                     break            
         
         elif piece == "n":
-            pass  # Implement logic for black knight
+            # Implement logic for black knight
+            if self.array2grid(row_index - 2, col_index - 1).isupper():
+                valid_moves.append(self.array2grid(row_index - 2, col_index - 1))
+            if self.array2grid(row_index - 2, col_index + 1).isupper():
+                valid_moves.append(self.array2grid(row_index - 2, col_index + 1))
+            if self.array2grid(row_index - 1, col_index + 2).isupper():
+                valid_moves.append(self.array2grid(row_index - 1, col_index + 2))
+            if self.array2grid(row_index + 1, col_index + 2).isupper():
+                valid_moves.append(self.array2grid(row_index + 1, col_index + 2))
+            if self.array2grid(row_index + 2, col_index + 1).isupper():
+                valid_moves.append(self.array2grid(row_index + 2, col_index + 1))
+            if self.array2grid(row_index + 2, col_index - 1).isupper():
+                valid_moves.append(self.array2grid(row_index + 2, col_index - 1))
+            if self.array2grid(row_index + 1, col_index - 2).isupper():
+                valid_moves.append(self.array2grid(row_index + 1, col_index - 2))
+            if self.array2grid(row_index + 1, col_index - 2).isupper():
+                valid_moves.append(self.array2grid(row_index + 1, col_index - 2))
         
         elif piece == "b":
-            pass  # Implement logic for black bishop
+            # Implement logic for black bishop
+            for i in range(1, 8):
+                pos_up_right = self.array2grid(row_index - i, col_index + i)
+                if pos_up_right == "-1":
+                    break
+                piece_up_right = self.get_piece(pos_up_right)
+                if piece_up_right == '':
+                    valid_moves.append(pos_up_right)
+                elif piece_up_right.isupper():
+                    valid_moves.append(pos_up_right)
+                    break
+                else:
+                    break
+            for i in range(1, 8):
+                pos_up_left = self.array2grid(row_index - i, col_index - i)
+                if pos_up_left == "-1":
+                    break
+                piece_up_left = self.get_piece(pos_up_left)
+                if piece_up_left == '':
+                    valid_moves.append(pos_up_left)
+                elif piece_up_left.isupper():
+                    valid_moves.append(pos_up_left)
+                    break
+                else:
+                    break
+            for i in range(1, 8):
+                pos_down_right = self.array2grid(row_index + i, col_index + i)
+                if pos_down_right == "-1":
+                    break
+                piece_down_right = self.get_piece(pos_down_right)
+                if piece_down_right == '':
+                    valid_moves.append(pos_down_right)
+                elif piece_down_right.isupper():
+                    valid_moves.append(pos_down_right)
+                    break
+                else:
+                    break
+            for i in range(1, 8):
+                pos_down_left = self.array2grid(row_index + i, col_index - i)
+                if pos_down_left == "-1":
+                    break
+                piece_down_left = self.get_piece(pos_down_left)
+                if piece_down_left == '':
+                    valid_moves.append(pos_down_left)
+                elif piece_down_left.isupper():
+                    valid_moves.append(pos_down_left)
+                    break
+                else:
+                    break
         
         elif piece == "q":
-            pass  # Implement logic for black queen
+            # Implement logic for black queen
+            for i in range(row_index-1, -1, -1):
+                pos_up = self.array2grid(i, col_index)
+                piece_up = self.get_piece(pos_up)
+                if piece_up == '':
+                    valid_moves.append(pos_up)
+                elif piece_up.isupper():
+                    valid_moves.append(pos_up)
+                    break
+                else:
+                    break
+            for j in range(row_index+1, 8):
+                pos_down = self.array2grid(j, col_index)
+                piece_down = self.get_piece(pos_down)
+                if piece_down == '':
+                    valid_moves.append(pos_down)
+                elif piece_down.isupper():
+                    valid_moves.append(pos_down)
+                    break
+                else:
+                    break
+            for k in range(col_index-1, -1, -1):
+                pos_left = self.array2grid(row_index, k)
+                piece_left = self.get_piece(pos_left)
+                if piece_left == '':
+                    valid_moves.append(pos_left)
+                elif piece_left.isupper():
+                    valid_moves.append(pos_left)
+                    break
+                else:
+                    break
+            for l in range(col_index+1, 8):
+                pos_right = self.array2grid(row_index, l)
+                piece_right = self.get_piece(pos_right)
+                if piece_right == '':
+                    valid_moves.append(pos_right)
+                elif piece_right.isupper():
+                    valid_moves.append(pos_right)
+                    break
+                else:
+                    break   
+            for i in range(1, 8):
+                pos_up_right = self.array2grid(row_index - i, col_index + i)
+                if pos_up_right == "-1":
+                    break
+                piece_up_right = self.get_piece(pos_up_right)
+                if piece_up_right == '':
+                    valid_moves.append(pos_up_right)
+                elif piece_up_right.isupper():
+                    valid_moves.append(pos_up_right)
+                    break
+                else:
+                    break
+            for i in range(1, 8):
+                pos_up_left = self.array2grid(row_index - i, col_index - i)
+                if pos_up_left == "-1":
+                    break
+                piece_up_left = self.get_piece(pos_up_left)
+                if piece_up_left == '':
+                    valid_moves.append(pos_up_left)
+                elif piece_up_left.isupper():
+                    valid_moves.append(pos_up_left)
+                    break
+                else:
+                    break
+            for i in range(1, 8):
+                pos_down_right = self.array2grid(row_index + i, col_index + i)
+                if pos_down_right == "-1":
+                    break
+                piece_down_right = self.get_piece(pos_down_right)
+                if piece_down_right == '':
+                    valid_moves.append(pos_down_right)
+                elif piece_down_right.isupper():
+                    valid_moves.append(pos_down_right)
+                    break
+                else:
+                    break
+            for i in range(1, 8):
+                pos_down_left = self.array2grid(row_index + i, col_index - i)
+                if pos_down_left == "-1":
+                    break
+                piece_down_left = self.get_piece(pos_down_left)
+                if piece_down_left == '':
+                    valid_moves.append(pos_down_left)
+                elif piece_down_left.isupper():
+                    valid_moves.append(pos_down_left)
+                    break
+                else:
+                    break
         
         elif piece == "k":
             pass  # Implement logic for black king
