@@ -131,22 +131,20 @@ class ChessLogic:
         
         elif piece == "N":
             # Implement logic for white knight
-            if self.array2grid(row_index - 2, col_index - 1).islower():
-                valid_moves.append(self.array2grid(row_index - 2, col_index - 1))
-            if self.array2grid(row_index - 2, col_index + 1).islower():
-                valid_moves.append(self.array2grid(row_index - 2, col_index + 1))
-            if self.array2grid(row_index - 1, col_index + 2).islower():
-                valid_moves.append(self.array2grid(row_index - 1, col_index + 2))
-            if self.array2grid(row_index + 1, col_index + 2).islower():
-                valid_moves.append(self.array2grid(row_index + 1, col_index + 2))
-            if self.array2grid(row_index + 2, col_index + 1).islower():
-                valid_moves.append(self.array2grid(row_index + 2, col_index + 1))
-            if self.array2grid(row_index + 2, col_index - 1).islower():
-                valid_moves.append(self.array2grid(row_index + 2, col_index - 1))
-            if self.array2grid(row_index + 1, col_index - 2).islower():
-                valid_moves.append(self.array2grid(row_index + 1, col_index - 2))
-            if self.array2grid(row_index + 1, col_index - 2).islower():
-                valid_moves.append(self.array2grid(row_index + 1, col_index - 2))
+            knight_moves = [
+            (row_index - 2, col_index - 1),
+            (row_index - 2, col_index + 1),
+            (row_index - 1, col_index + 2),
+            (row_index + 1, col_index + 2),
+            (row_index + 2, col_index + 1),
+            (row_index + 2, col_index - 1),
+            (row_index + 1, col_index - 2),
+            (row_index - 1, col_index - 2)
+            ]
+            for move in knight_moves:
+                new_pos = self.array2grid(move[0], move[1])
+                if new_pos != "-1" and (self.get_piece(new_pos) == "" or self.get_piece(new_pos).islower()):
+                    valid_moves.append(new_pos)
         
         elif piece == "B":
             # Implement logic for white bishop
@@ -292,11 +290,36 @@ class ChessLogic:
                     break
         
         elif piece == "K":
-            pass  # Implement logic for white king
+            # Implement logic for white king
+            king_moves = [
+                (row_index - 1, col_index - 1),  
+                (row_index - 1, col_index),      
+                (row_index - 1, col_index + 1), 
+                (row_index, col_index + 1),      
+                (row_index + 1, col_index + 1),  
+                (row_index + 1, col_index),      
+                (row_index + 1, col_index - 1),  
+                (row_index, col_index - 1)   
+            ]
+            
+            # get opponent's possible moves
+            opponent_moves = set()
+            for col in range(ord('a'), ord('h') + 1):
+                for row in range(1, 9):
+                    square = chr(col) + str(row)
+                    if self.get_piece(square).islower():
+                        opponent_moves.update(self.get_valid_end_pos(square, self.get_piece(square)))
+            
+            for move in king_moves:
+                new_pos = self.array2grid(move[0], move[1])
+                if new_pos != "-1":
+                    piece_at_pos = self.get_piece(new_pos)
+                    if (piece_at_pos == '' or piece_at_pos.islower()) and new_pos not in opponent_moves:
+                        valid_moves.append(new_pos)
             
         
         elif piece == "p":
-            pass  # Implement logic for black pawn
+            # Implement logic for black pawn
             # if this is its first move, it can move 1 or 2    
             pos_at_front = self.array2grid(row_index+1, col_index)
             # if the piece is not at the top row
@@ -363,22 +386,20 @@ class ChessLogic:
         
         elif piece == "n":
             # Implement logic for black knight
-            if self.array2grid(row_index - 2, col_index - 1).isupper():
-                valid_moves.append(self.array2grid(row_index - 2, col_index - 1))
-            if self.array2grid(row_index - 2, col_index + 1).isupper():
-                valid_moves.append(self.array2grid(row_index - 2, col_index + 1))
-            if self.array2grid(row_index - 1, col_index + 2).isupper():
-                valid_moves.append(self.array2grid(row_index - 1, col_index + 2))
-            if self.array2grid(row_index + 1, col_index + 2).isupper():
-                valid_moves.append(self.array2grid(row_index + 1, col_index + 2))
-            if self.array2grid(row_index + 2, col_index + 1).isupper():
-                valid_moves.append(self.array2grid(row_index + 2, col_index + 1))
-            if self.array2grid(row_index + 2, col_index - 1).isupper():
-                valid_moves.append(self.array2grid(row_index + 2, col_index - 1))
-            if self.array2grid(row_index + 1, col_index - 2).isupper():
-                valid_moves.append(self.array2grid(row_index + 1, col_index - 2))
-            if self.array2grid(row_index + 1, col_index - 2).isupper():
-                valid_moves.append(self.array2grid(row_index + 1, col_index - 2))
+            knight_moves = [
+                (row_index - 2, col_index - 1),
+                (row_index - 2, col_index + 1),
+                (row_index - 1, col_index + 2),
+                (row_index + 1, col_index + 2),
+                (row_index + 2, col_index + 1),
+                (row_index + 2, col_index - 1),
+                (row_index + 1, col_index - 2),
+                (row_index - 1, col_index - 2)
+            ]
+            for move in knight_moves:
+                new_pos = self.array2grid(move[0], move[1])
+                if new_pos != "-1" and (self.get_piece(new_pos) == "" or self.get_piece(new_pos).isupper()):
+                    valid_moves.append(new_pos)
         
         elif piece == "b":
             # Implement logic for black bishop
@@ -523,7 +544,32 @@ class ChessLogic:
                     break
         
         elif piece == "k":
-            pass  # Implement logic for black king
+            # Implement logic for black king
+            king_moves = [
+                (row_index - 1, col_index - 1),  
+                (row_index - 1, col_index),      
+                (row_index - 1, col_index + 1), 
+                (row_index, col_index + 1),      
+                (row_index + 1, col_index + 1),  
+                (row_index + 1, col_index),      
+                (row_index + 1, col_index - 1),  
+                (row_index, col_index - 1)   
+            ]
+            
+            # get opponent's possible moves
+            opponent_moves = set()
+            for col in range(ord('a'), ord('h') + 1):
+                for row in range(1, 9):
+                    square = chr(col) + str(row)
+                    if self.get_piece(square).isupper():
+                        opponent_moves.update(self.get_valid_end_pos(square, self.get_piece(square)))
+            
+            for move in king_moves:
+                new_pos = self.array2grid(move[0], move[1])
+                if new_pos != "-1":
+                    piece_at_pos = self.get_piece(new_pos)
+                    if (piece_at_pos == '' or piece_at_pos.islower()) and new_pos not in opponent_moves:
+                        valid_moves.append(new_pos)
         
         return valid_moves
         
@@ -551,4 +597,12 @@ class ChessLogic:
         print("end_pos: ", end_pos, " = ", self.get_piece(end_pos))
         valid_end_pos = self.get_valid_end_pos(start_pos, self.get_piece(start_pos))
         print(valid_end_pos)
+        if end_pos in valid_end_pos:
+            start_index = self.grid2array(start_pos)
+            end_index = self.grid2array(end_pos)
+            self.board[end_index[0]][end_index[1]] = self.board[start_index[0]][start_index[1]]
+            self.board[start_index[0]][start_index[1]] = ""
+            return move
+        
+        print("Invalid Moves")
         return ""
