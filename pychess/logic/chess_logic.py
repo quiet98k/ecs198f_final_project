@@ -36,7 +36,11 @@ class ChessLogic:
 			['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'],
 		]
         self.result = "" 
-    
+        self.last_move = None
+        
+        
+        
+        
     # given the array index, print the grid string    
     def array2grid(self, row: int, col: int) -> str:
         if(col<0 or col>7 or row<0 or row>7):
@@ -63,6 +67,10 @@ class ChessLogic:
         row_index, col_index = self.grid2array(pos)
         valid_moves_in_index = []
         valid_moves = []
+        
+        
+        
+        
         if piece == "P":
             # Implement logic for white pawn
             # if this is its first move, it can move 1 or 2    
@@ -85,6 +93,7 @@ class ChessLogic:
             pos_at_right_diag = self.array2grid(row_index-1, col_index+1)
             if pos_at_right_diag != "-1" and self.get_piece(pos_at_right_diag).islower():
                 valid_moves.append(pos_at_right_diag)
+                
 
         elif piece == "R":
             # Implement logic for white rook
@@ -303,18 +312,19 @@ class ChessLogic:
             ]
             
             # get opponent's possible moves
-            opponent_moves = set()
-            for col in range(ord('a'), ord('h') + 1):
-                for row in range(1, 9):
-                    square = chr(col) + str(row)
-                    if self.get_piece(square).islower():
-                        opponent_moves.update(self.get_valid_end_pos(square, self.get_piece(square)))
+            # opponent_moves = set()
+            # for col in range(ord('a'), ord('h') + 1):
+            #     for row in range(1, 9):
+            #         square = chr(col) + str(row)
+            #         if self.get_piece(square).islower():
+            #             opponent_moves.update(self.get_valid_end_pos(square, self.get_piece(square)))
             
             for move in king_moves:
                 new_pos = self.array2grid(move[0], move[1])
                 if new_pos != "-1":
                     piece_at_pos = self.get_piece(new_pos)
-                    if (piece_at_pos == '' or piece_at_pos.islower()) and new_pos not in opponent_moves:
+                    # if (piece_at_pos == '' or piece_at_pos.islower()) and new_pos not in opponent_moves:
+                    if (piece_at_pos == '' or piece_at_pos.islower()):
                         valid_moves.append(new_pos)
             
         
@@ -340,6 +350,9 @@ class ChessLogic:
             pos_at_right_diag = self.array2grid(row_index+1, col_index+1)
             if pos_at_right_diag != "-1" and self.get_piece(pos_at_right_diag).isupper():
                 valid_moves.append(pos_at_right_diag)
+                
+                
+
         
         elif piece == "r":
             # Implement logic for black rook
@@ -557,18 +570,19 @@ class ChessLogic:
             ]
             
             # get opponent's possible moves
-            opponent_moves = set()
-            for col in range(ord('a'), ord('h') + 1):
-                for row in range(1, 9):
-                    square = chr(col) + str(row)
-                    if self.get_piece(square).isupper():
-                        opponent_moves.update(self.get_valid_end_pos(square, self.get_piece(square)))
+            # opponent_moves = set()
+            # for col in range(ord('a'), ord('h') + 1):
+            #     for row in range(1, 9):
+            #         square = chr(col) + str(row)
+            #         if self.get_piece(square).isupper():
+            #             opponent_moves.update(self.get_valid_end_pos(square, self.get_piece(square)))
             
             for move in king_moves:
                 new_pos = self.array2grid(move[0], move[1])
                 if new_pos != "-1":
                     piece_at_pos = self.get_piece(new_pos)
-                    if (piece_at_pos == '' or piece_at_pos.islower()) and new_pos not in opponent_moves:
+                    # if (piece_at_pos == '' or piece_at_pos.islower()) and new_pos not in opponent_moves:
+                    if (piece_at_pos == '' or piece_at_pos.islower()):
                         valid_moves.append(new_pos)
         
         return valid_moves
@@ -595,13 +609,101 @@ class ChessLogic:
         end_pos = move[2:]
         print("start_pos: ", start_pos, " = ", self.get_piece(start_pos))
         print("end_pos: ", end_pos, " = ", self.get_piece(end_pos))
-        valid_end_pos = self.get_valid_end_pos(start_pos, self.get_piece(start_pos))
-        print(valid_end_pos)
+        piece = self.get_piece(start_pos)
+        
+
+        
+
+        
+        
+        
+        opponent_moves = set()
+        my_king_pos = ""
+        if piece != "-1" and piece.isupper():
+            # get opponent's possible moves
+            for col in range(ord('a'), ord('h') + 1):
+                for row in range(1, 9):
+                    square = chr(col) + str(row)
+                    if self.get_piece(square) == 'K':
+                        my_king_pos = square
+                    if self.get_piece(square).islower():
+                        opponent_moves.update(self.get_valid_end_pos(square, self.get_piece(square)))
+        elif piece != "-1" and piece.islower():
+            # get opponent's possible moves
+            for col in range(ord('a'), ord('h') + 1):
+                for row in range(1, 9):
+                    square = chr(col) + str(row)
+                    if self.get_piece(square) == 'k':
+                        my_king_pos = square
+                    if self.get_piece(square).isupper():
+                        opponent_moves.update(self.get_valid_end_pos(square, self.get_piece(square)))
+        if piece == 'k' or piece == 'K':
+            if end_pos in opponent_moves:
+                print("This move will leave King in Check")
+                return ""
+        if my_king_pos in opponent_moves:
+            print("This move will leave King in Check")
+            return ""
+        
+        valid_end_pos = self.get_valid_end_pos(start_pos, piece)
+        print("Valid End Pos: ", valid_end_pos)
+        
+        # now check for En Passant Capture
+        if self.last_move != None:
+            last_piece, last_start_pos, last_end_pos = self.last_move
+            if piece == 'P' and last_piece == 'p':
+                # if I'm white pawn and last move is black pawn
+                # I want to check
+                # 1. Does the last pawn move twice ahead?
+                # 2. Am I at the correct pos
+                # with both is true, do I want to move at the correct position?
+                # If I do want to move at the correct position, then eat it
+                
+                if abs(int(last_start_pos[1]) - int(last_end_pos[1])) == 2:
+                    if start_pos[1] == "5":
+                        if end_pos == last_end_pos[0] + str(int(last_end_pos[1]) + 1):
+                            start_index = self.grid2array(start_pos)
+                            end_index = self.grid2array(end_pos)
+                            last_end_index = self.grid2array(last_end_pos)
+                            self.board[end_index[0]][end_index[1]] = self.board[start_index[0]][start_index[1]]
+                            self.board[start_index[0]][start_index[1]] = ""
+                            self.board[last_end_index[0]][last_end_index[1]] = ""
+                            self.last_move = piece, start_pos, end_pos
+                            if end_pos[1] == "8":
+                                self.board[end_index[0]][end_index[1]] = "Q"
+                            return move
+    
+            elif piece == 'p' and last_piece == 'P':
+                if abs(int(last_start_pos[1]) - int(last_end_pos[1])) == 2:
+                    if start_pos[1] == "4":
+                        if end_pos == last_end_pos[0] + str(int(last_end_pos[1]) - 1):
+                            start_index = self.grid2array(start_pos)
+                            end_index = self.grid2array(end_pos)
+                            last_end_index = self.grid2array(last_end_pos)
+                            self.board[end_index[0]][end_index[1]] = self.board[start_index[0]][start_index[1]]
+                            self.board[start_index[0]][start_index[1]] = ""
+                            self.board[last_end_index[0]][last_end_index[1]] = ""
+                            self.last_move = piece, start_pos, end_pos
+                            if end_pos[1] == "1":
+                                self.board[end_index[0]][end_index[1]] = "q"
+                            return move
+        
+
+        
         if end_pos in valid_end_pos:
+            
             start_index = self.grid2array(start_pos)
             end_index = self.grid2array(end_pos)
+ 
             self.board[end_index[0]][end_index[1]] = self.board[start_index[0]][start_index[1]]
             self.board[start_index[0]][start_index[1]] = ""
+            self.last_move = piece, start_pos, end_pos
+            
+            if piece == 'P' and end_pos[1] == "8":
+                self.board[end_index[0]][end_index[1]] = "Q"
+            if piece == 'p' and end_pos[1] == "1":
+                self.board[end_index[0]][end_index[1]] = "q"
+            
             return move
         
         print("Invalid Moves")
