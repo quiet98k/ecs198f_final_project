@@ -37,6 +37,13 @@ class ChessLogic:
 		]
         self.result = "" 
         self.last_move = None
+        self.white_king_moved = False
+        self.black_king_moved = False
+        self.white_left_rook_moved = False
+        self.white_right_rook_moved = False
+        self.black_left_rook_moved = False
+        self.black_right_rook_moved = False
+        
         
         
         
@@ -610,13 +617,10 @@ class ChessLogic:
         print("start_pos: ", start_pos, " = ", self.get_piece(start_pos))
         print("end_pos: ", end_pos, " = ", self.get_piece(end_pos))
         piece = self.get_piece(start_pos)
+        promotion = False
+        capture = False
         
 
-        
-
-        
-        
-        
         opponent_moves = set()
         my_king_pos = ""
         if piece != "-1" and piece.isupper():
@@ -628,6 +632,7 @@ class ChessLogic:
                         my_king_pos = square
                     if self.get_piece(square).islower():
                         opponent_moves.update(self.get_valid_end_pos(square, self.get_piece(square)))
+                        
         elif piece != "-1" and piece.islower():
             # get opponent's possible moves
             for col in range(ord('a'), ord('h') + 1):
@@ -644,6 +649,77 @@ class ChessLogic:
         if my_king_pos in opponent_moves:
             print("This move will leave King in Check")
             return ""
+        
+        # check for castling
+        if(piece == "K" and self.white_king_moved == False):
+            start_row_index, start_col_index = self.grid2array(start_pos)
+            end_row_index, end_col_index = self.grid2array(end_pos)
+            if(start_row_index == end_row_index == 7 and start_col_index == 4 ):
+                if(end_col_index == 2 and self.white_left_rook_moved == False):
+                    # move to the left
+                    if(self.board[7][1] == self.board[7][2] == self.board[7][3] == "" and 
+                       "b1" not in opponent_moves and "c1" not in opponent_moves and  "d1" not in opponent_moves and "e1" not in opponent_moves):
+                        # then it's a valid castling
+                        self.board[7][4] = ""
+                        self.board[7][0] = ""
+                        self.board[7][2] = "K"
+                        self.board[7][3] = "R"
+                        self.white_king_moved = True
+                        self.white_left_rook_moved = True
+                        self.last_move = piece, start_pos, end_pos
+                        extended_chess_notation = "0-0-0"
+                        print("extended_chess_notation: " + extended_chess_notation)
+                        return extended_chess_notation
+                if(end_col_index == 6 and self.white_right_rook_moved == False):
+                    # move to the right
+                    if(self.board[7][5] == self.board[7][6] == "" and 
+                       "e1" not in opponent_moves and "f1" not in opponent_moves and  "g1" not in opponent_moves):
+                        # then it's a valid castling
+                        self.board[7][4] = ""
+                        self.board[7][7] = ""
+                        self.board[7][6] = "K"
+                        self.board[7][5] = "R"
+                        self.white_king_moved = True
+                        self.white_right_rook_moved = True
+                        self.last_move = piece, start_pos, end_pos
+                        extended_chess_notation = "0-0"
+                        print("extended_chess_notation: " + extended_chess_notation)
+                        return extended_chess_notation
+        elif(piece == "k" and self.black_king_moved == False):
+            start_row_index, start_col_index = self.grid2array(start_pos)
+            end_row_index, end_col_index = self.grid2array(end_pos)
+            if(start_row_index == end_row_index == 0 and start_col_index == 4 ):
+                if(end_col_index == 2 and self.black_left_rook_moved == False):
+                    # move to the left
+                    if(self.board[0][1] == self.board[0][2] == self.board[0][3] == "" and 
+                       "b8" not in opponent_moves and "c8" not in opponent_moves and  "d8" not in opponent_moves and "e8" not in opponent_moves):
+                        # then it's a valid castling
+                        self.board[0][4] = ""
+                        self.board[0][0] = ""
+                        self.board[0][2] = "k"
+                        self.board[0][3] = "r"
+                        self.black_king_moved = True
+                        self.black_left_rook_moved = True
+                        self.last_move = piece, start_pos, end_pos
+                        extended_chess_notation = "0-0-0"
+                        print("extended_chess_notation: " + extended_chess_notation)
+                        return extended_chess_notation
+                if(end_col_index == 6 and self.black_right_rook_moved == False):
+                    # move to the right
+                    if(self.board[0][5] == self.board[0][6] == "" and 
+                       "e8" not in opponent_moves and "f8" not in opponent_moves and  "g8" not in opponent_moves):
+                        # then it's a valid castling
+                        self.board[0][4] = ""
+                        self.board[0][7] = ""
+                        self.board[0][6] = "k"
+                        self.board[0][5] = "r"
+                        self.black_king_moved = True
+                        self.black_right_rook_moved = True
+                        self.last_move = piece, start_pos, end_pos
+                        extended_chess_notation = "0-0"
+                        print("extended_chess_notation: " + extended_chess_notation)
+                        return extended_chess_notation
+                        
         
         valid_end_pos = self.get_valid_end_pos(start_pos, piece)
         print("Valid End Pos: ", valid_end_pos)
@@ -668,10 +744,13 @@ class ChessLogic:
                             self.board[end_index[0]][end_index[1]] = self.board[start_index[0]][start_index[1]]
                             self.board[start_index[0]][start_index[1]] = ""
                             self.board[last_end_index[0]][last_end_index[1]] = ""
+                            capture = True
                             self.last_move = piece, start_pos, end_pos
                             if end_pos[1] == "8":
                                 self.board[end_index[0]][end_index[1]] = "Q"
-                            return move
+                            extended_chess_notation = (piece.lower() if piece.lower() != "p" else "") + start_pos + "x" + end_pos
+                            print("extended_chess_notation: " + extended_chess_notation)
+                            return extended_chess_notation
     
             elif piece == 'p' and last_piece == 'P':
                 if abs(int(last_start_pos[1]) - int(last_end_pos[1])) == 2:
@@ -683,10 +762,13 @@ class ChessLogic:
                             self.board[end_index[0]][end_index[1]] = self.board[start_index[0]][start_index[1]]
                             self.board[start_index[0]][start_index[1]] = ""
                             self.board[last_end_index[0]][last_end_index[1]] = ""
+                            capture = True
                             self.last_move = piece, start_pos, end_pos
                             if end_pos[1] == "1":
                                 self.board[end_index[0]][end_index[1]] = "q"
-                            return move
+                            extended_chess_notation = (piece.lower() if piece.lower() != "p" else "") + start_pos + ("x" if capture else "") + end_pos + ("=Q" if promotion else "")
+                            print("extended_chess_notation: " + extended_chess_notation)
+                            return extended_chess_notation
         
 
         
@@ -696,15 +778,21 @@ class ChessLogic:
             end_index = self.grid2array(end_pos)
  
             self.board[end_index[0]][end_index[1]] = self.board[start_index[0]][start_index[1]]
+            if(self.board[start_index[0]][start_index[1]] != ""):
+                capture = True
             self.board[start_index[0]][start_index[1]] = ""
             self.last_move = piece, start_pos, end_pos
             
             if piece == 'P' and end_pos[1] == "8":
                 self.board[end_index[0]][end_index[1]] = "Q"
+                promotion = True
             if piece == 'p' and end_pos[1] == "1":
                 self.board[end_index[0]][end_index[1]] = "q"
+                promotion = True
             
-            return move
+            extended_chess_notation = (piece.lower() if piece.lower() != "p" else "") + start_pos + ("x" if capture else "") + end_pos + ("=Q" if promotion else "")
+            print("extended_chess_notation: " + extended_chess_notation)
+            return extended_chess_notation
         
         print("Invalid Moves")
         return ""
