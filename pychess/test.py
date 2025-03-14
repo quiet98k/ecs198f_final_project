@@ -415,3 +415,63 @@ def test_white_win_with_one_move():
     assert chess.play_move("a1a8") == "ra1a8"
     assert chess.result == "w"
     
+    chess = ChessLogic()
+    chess.check_order = False
+    chess.board = [
+        ['', '', '', '', '', '', 'k', ''],
+        ['', '', '', '', '', 'p', 'p', 'p'],
+        ['p', '', '', '', '', '', '', ''],
+        ['p', '', '', '', '', '', '', ''],
+        ['', '', '', '', '', 'b', '', ''],
+        ['', '', '', '', '', '', '', 'P'],
+        ['', '', '', '', '', 'P', 'P', ''],
+        ['', '', '', 'R', '', '', 'K', ''],
+    ]
+    assert chess.play_move("d1d8") == "rd1d8"
+    assert chess.result == "w"
+    
+    chess = ChessLogic()
+    chess.check_order = False
+    chess.board = [
+        ['r', '', 'b', 'q', 'k', 'b', '', 'r'],
+        ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+        ['','','n','','','n','',''],
+        ['','','','Q','','','',''],
+        ['','','B','','P','','',''],
+        ['','','','','','','',''],
+        ['P', 'B', '', '', '', 'P', 'P', 'P'],
+        ['R', 'N', '', '', 'K', '', 'N', 'R'],
+    ]
+    assert chess.play_move("d5f7") == "qd5xf7"
+    assert chess.result == "w"
+    
+    chess = ChessLogic()
+    chess.check_order = False
+    chess.board = [
+        ['r', 'n', '', 'k', '', 'b', 'b', 'r'],
+        ['p', 'p', '', '', 'n', 'q', 'p', 'p'],
+        ['','','','p','','p','',''],
+        ['','N','p','','p','','',''],
+        ['','','','','P','P','',''],
+        ['','','','P','','N','P',''],
+        ['P', 'P', 'P', 'B', '', '', '', 'P'],
+        ['', 'K', 'R', '', 'Q', 'B', '', 'R'],
+    ]
+    assert chess.play_move("f7a2") == "qf7xa2"
+    assert chess.result == "b"
+    
+    chess = ChessLogic()
+    chess.check_order = False
+    chess.board = [
+        ['', '', 'r', '', '', 'r', 'k', ''],
+        ['p', '', '', '', '', 'p', 'p', ''],
+        ['', 'p', '', '', '', 'n', '', 'p'],
+        ['', '', '', '', 'p', 'N', '', ''],
+        ['', '', '', '', 'P', '', '', ''],
+        ['', '', 'q', '', 'P', '', '', ''],
+        ['n', '', 'P', 'R', 'Q', '', 'P', 'P'],
+        ['', '', '', 'K', '', 'R', '', ''],
+    ]
+    assert chess.play_move("c3a1") == "qc3a1"
+    assert chess.result == "b"
+    
