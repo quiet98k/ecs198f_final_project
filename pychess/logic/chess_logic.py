@@ -43,6 +43,7 @@ class ChessLogic:
         self.white_right_rook_moved = False
         self.black_left_rook_moved = False
         self.black_right_rook_moved = False
+        self.check_order = True
         
         
         
@@ -902,17 +903,18 @@ class ChessLogic:
         promotion = False
         capture = False
         
-        if self.last_move != None:
-            if piece.isupper() and self.last_move[0].isupper():
-                print("Invalid Order, should be black's move now")
-                return ""
-            if piece.islower() and self.last_move[0].islower():
-                print("Invalid Order, should be white's move now")
-                return ""
-        else:
-            if piece.islower():
-                print("First move should be white")
-                return ""
+        if self.check_order:
+            if self.last_move != None:
+                if piece.isupper() and self.last_move[0].isupper():
+                    print("Invalid Order, should be black's move now")
+                    return ""
+                if piece.islower() and self.last_move[0].islower():
+                    print("Invalid Order, should be white's move now")
+                    return ""
+            else:
+                if piece.islower():
+                    print("First move should be white")
+                    return ""
         
 
         opponent_moves = set()
@@ -1092,10 +1094,10 @@ class ChessLogic:
         if end_pos in valid_end_pos:   
             start_index = self.grid2array(start_pos)
             end_index = self.grid2array(end_pos)
+            if(self.board[end_index[0]][end_index[1]] != ""):
+                capture = True
  
             self.board[end_index[0]][end_index[1]] = self.board[start_index[0]][start_index[1]]
-            if(self.board[start_index[0]][start_index[1]] != ""):
-                capture = True
             self.board[start_index[0]][start_index[1]] = ""
             self.last_move = piece, start_pos, end_pos
             
@@ -1149,15 +1151,15 @@ class ChessLogic:
         promotion = False
         capture = False
         
-
-        if self.last_move != None:
-            if piece.isupper() and self.last_move[0].isupper():
-                return ""
-            if piece.islower() and self.last_move[0].islower():
-                return ""
-        else:
-            if piece.islower():
-                return ""
+        if self.check_order:
+            if self.last_move != None:
+                if piece.isupper() and self.last_move[0].isupper():
+                    return ""
+                if piece.islower() and self.last_move[0].islower():
+                    return ""
+            else:
+                if piece.islower():
+                    return ""
 
         opponent_moves = set()
         my_king_pos = ""
@@ -1304,13 +1306,14 @@ class ChessLogic:
                                 self.board[end_index[0]][end_index[1]] = "q"
                             extended_chess_notation = (piece.lower() if piece.lower() != "p" else "") + start_pos + ("x" if capture else "") + end_pos + ("=Q" if promotion else "")
                             return extended_chess_notation
+        
         if end_pos in valid_end_pos:   
             start_index = self.grid2array(start_pos)
             end_index = self.grid2array(end_pos)
- 
-            self.board[end_index[0]][end_index[1]] = self.board[start_index[0]][start_index[1]]
-            if(self.board[start_index[0]][start_index[1]] != ""):
+            if(self.board[end_index[0]][end_index[1]] != ""):
                 capture = True
+                
+            self.board[end_index[0]][end_index[1]] = self.board[start_index[0]][start_index[1]]
             self.board[start_index[0]][start_index[1]] = ""
             self.last_move = piece, start_pos, end_pos
             
@@ -1332,7 +1335,6 @@ class ChessLogic:
                 self.black_left_rook_moved = True
             if piece == "r" and start_pos == "h8" and self.black_right_rook_moved == False:
                 self.black_right_rook_moved = True
-            
             
             
             extended_chess_notation = (piece.lower() if piece.lower() != "p" else "") + start_pos + ("x" if capture else "") + end_pos + ("=Q" if promotion else "")
