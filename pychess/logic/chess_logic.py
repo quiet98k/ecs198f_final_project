@@ -44,6 +44,7 @@ class ChessLogic:
         self.black_left_rook_moved = False
         self.black_right_rook_moved = False
         self.check_order = True
+        self.side = "w"
         
         
         
@@ -873,7 +874,8 @@ class ChessLogic:
             self.result = "b"
         elif black_in_check and not black_has_legal_moves:
             self.result = "w"
-        elif not white_has_legal_moves and not black_has_legal_moves:
+        elif ((not white_in_check and not white_has_legal_moves and self.side == "w") or 
+            (not black_in_check and not black_has_legal_moves and self.side == "b")):
             self.result = "d"
         else:
             self.result = ""
@@ -915,6 +917,7 @@ class ChessLogic:
                 if piece.islower():
                     print("First move should be white")
                     return ""
+            self.side == "w" if piece.isupper else "b"
         
 
         opponent_moves = set()
@@ -1160,6 +1163,7 @@ class ChessLogic:
             else:
                 if piece.islower():
                     return ""
+            self.side == "w" if piece.isupper else "b"
 
         opponent_moves = set()
         my_king_pos = ""

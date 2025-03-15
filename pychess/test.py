@@ -346,8 +346,34 @@ def test_black_king_valid_moves():
 # Castling tests
 def test_white_castling():
     """Test white castling mechanics."""
-    chess = ChessLogic()
+    
     # Test kingside castling
+
+    # valid castling
+    chess = ChessLogic()
+    chess.check_order = False
+    assert chess.play_move("a2a4") == "a2a4"
+    assert chess.play_move("b2b4") == "b2b4"
+    assert chess.play_move("c2c4") == "c2c4"
+    assert chess.play_move("d2d4") == "d2d4"
+    assert chess.play_move("b1c3") == "nb1c3"
+    assert chess.play_move("c1a3") == "bc1a3"
+    assert chess.play_move("d1b3") == "qd1b3"
+    assert chess.play_move("e1c1") == "0-0-0"
+    assert chess.get_piece("c1") == "K"
+    assert chess.get_piece("d1") == "R"
+    
+    
+    
+    
+    
+    # some piece in the middle
+    # thread start pos(for king? rook?)
+    # thread middle pos
+    # thread end pos(king? rook?)
+    
+    
+    
     # Test queenside castling
     # Test invalid castling (pieces in way, king/rook moved, etc.)
     # Test castling through check
@@ -474,4 +500,34 @@ def test_white_win_with_one_move():
     ]
     assert chess.play_move("c3a1") == "qc3a1"
     assert chess.result == "b"
+    
+    chess = ChessLogic()
+    chess.board = [
+        ['', '', '', '', '', '', 'K', ''],
+        ['r', '', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', '', ''],
+        ['', '', '', '', '', 'r', '', ''],
+    ]
+    assert chess.play_move("g8h8") == "kg8h8"
+    assert chess.play_move("f1g1") == "rf1g1"
+    assert chess.result == "d"
+    
+    chess = ChessLogic()
+    chess.board = [
+        ['', '', '', '', '', '', '', 'k'],
+        ['R', '', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', '', ''],
+        ['', '', '', '', '', 'R', '', ''],
+    ]
+    # assert chess.play_move("g8h8") == "kg8h8"
+    assert chess.play_move("f1g1") == "rf1g1"
+    assert chess.result == "d"
     
