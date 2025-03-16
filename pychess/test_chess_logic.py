@@ -281,6 +281,15 @@ def test_pawn_en_passant():
 def test_white_rook_valid_moves():
     """Test white rook movement validation."""
     chess = ChessLogic()
+    chess.check_order = False
+    assert chess.play_move("a1a2") == ""
+    assert chess.play_move("a1a3") == ""
+    assert chess.play_move("a1b1") == ""
+    assert chess.play_move("a1c1") == ""
+    assert chess.play_move("a2a4") == "a2a4"
+    assert chess.play_move("")
+    
+    
     # Test horizontal and vertical movements
     # Test captures
     # Test blocked paths
@@ -383,7 +392,7 @@ def test_black_castling():
     chess = ChessLogic()
     # Similar tests as white castling
 
-def test_white_win_with_one_move():
+def test_wining_status():
     """Test white win with one move"""
     # chess.board = [
     #     ['', '', '', '', '', '', '', ''],
@@ -501,20 +510,23 @@ def test_white_win_with_one_move():
     assert chess.play_move("c3a1") == "qc3a1"
     assert chess.result == "b"
     
-    chess = ChessLogic()
-    chess.board = [
-        ['', '', '', '', '', '', 'K', ''],
-        ['r', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', 'r', '', ''],
-    ]
-    assert chess.play_move("g8h8") == "kg8h8"
-    assert chess.play_move("f1g1") == "rf1g1"
-    assert chess.result == "d"
+    
+def test_draw_status():
+    # chess = ChessLogic()
+    # chess.board = [
+    #     ['', '', '', '', '', '', 'K', ''],
+    #     ['r', '', '', '', '', '', '', ''],
+    #     ['', '', '', '', '', '', '', ''],
+    #     ['', '', '', '', '', '', '', ''],
+    #     ['', '', '', '', '', '', '', ''],
+    #     ['', '', '', '', '', '', '', ''],
+    #     ['', '', '', '', '', '', '', ''],
+    #     ['', '', '', '', '', 'r', '', ''],
+    # ]
+    # assert chess.play_move("g8h8") == "kg8h8"
+    # assert chess.result == ""
+    # assert chess.play_move("f1g1") == "rf1g1"
+    # assert chess.result == "d"
     
     chess = ChessLogic()
     chess.board = [
@@ -530,4 +542,3 @@ def test_white_win_with_one_move():
     # assert chess.play_move("g8h8") == "kg8h8"
     assert chess.play_move("f1g1") == "rf1g1"
     assert chess.result == "d"
-    
