@@ -75,6 +75,7 @@ def test_get_piece():
     assert chess.get_piece("f8") == "b"  # Black bishop
     assert chess.get_piece("g8") == "n"  # Black knight
     assert chess.get_piece("h8") == "r"  # Black rook
+    assert chess.result == ""
     
     assert chess.get_piece("a7") == "p"  # Black pawn
     assert chess.get_piece("b7") == "p"  # Black pawn
@@ -84,6 +85,7 @@ def test_get_piece():
     assert chess.get_piece("f7") == "p"  # Black pawn
     assert chess.get_piece("g7") == "p"  # Black pawn
     assert chess.get_piece("h7") == "p"  # Black pawn
+    assert chess.result == ""
     
     # White pieces (last and second-to-last rows)
     assert chess.get_piece("a1") == "R"  # White rook
@@ -94,6 +96,7 @@ def test_get_piece():
     assert chess.get_piece("f1") == "B"  # White bishop
     assert chess.get_piece("g1") == "N"  # White knight
     assert chess.get_piece("h1") == "R"  # White rook
+    assert chess.result == ""
     
     assert chess.get_piece("a2") == "P"  # White pawn
     assert chess.get_piece("b2") == "P"  # White pawn
@@ -103,12 +106,14 @@ def test_get_piece():
     assert chess.get_piece("f2") == "P"  # White pawn
     assert chess.get_piece("g2") == "P"  # White pawn
     assert chess.get_piece("h2") == "P"  # White pawn
+    assert chess.result == ""
     
     # Test empty squares
     assert chess.get_piece("a3") == ""  # Empty square
     assert chess.get_piece("b3") == ""  # Empty square
     assert chess.get_piece("e4") == ""  # Empty square
     assert chess.get_piece("h6") == ""  # Empty square
+    assert chess.result == ""
     
 
 # Pawn move validation tests
@@ -123,6 +128,7 @@ def test_white_pawn_valid_moves():
         assert chess.get_piece(col+'2') == ""
         assert chess.get_piece(col+"3") == "P"
         assert chess.get_white_pawn_valid_moves(col+'3', 'P') == [col+'4']
+        assert chess.result == ""
         
         
     # check pawn first move two square
@@ -134,6 +140,7 @@ def test_white_pawn_valid_moves():
         assert chess.get_piece(col+'2') == ""
         assert chess.get_piece(col+"4") == "P"
         assert chess.get_white_pawn_valid_moves(col+'4', 'P') == [col+'5']
+        assert chess.result == ""
 
 def test_black_pawn_valid_moves():
     # check pawn first move one square
@@ -145,7 +152,7 @@ def test_black_pawn_valid_moves():
         assert chess.get_piece(col+'7') == ""
         assert chess.get_piece(col+"6") == "p"
         assert chess.get_black_pawn_valid_moves(col+'6', 'p') == [col+'5']
-        
+        assert chess.result == ""
     # check pawn first move two square
     chess = ChessLogic()
     chess.check_order = False
@@ -155,6 +162,7 @@ def test_black_pawn_valid_moves():
         assert chess.get_piece(col+'7') == ""
         assert chess.get_piece(col+"5") == "p"
         assert chess.get_black_pawn_valid_moves(col+'5', 'p') == [col+'4']
+        assert chess.result == ""
 
 def test_pawn_captures():
     # White pawn captures
@@ -167,6 +175,7 @@ def test_pawn_captures():
     assert chess.play_move("e4d5") == "e4xd5"
     assert chess.get_piece("d5") == "P"
     assert chess.get_piece("e4") == ""
+    assert chess.result == ""
     
     chess = ChessLogic()
     chess.check_order = False
@@ -177,6 +186,7 @@ def test_pawn_captures():
     assert chess.play_move("c4d5") == "c4xd5"
     assert chess.get_piece("d5") == "P"
     assert chess.get_piece("c4") == ""
+    assert chess.result == ""
     
     
     # Black pawn captures
@@ -188,6 +198,7 @@ def test_pawn_captures():
     assert "d4" in chess.get_black_pawn_valid_moves("e5", "p")
     assert chess.play_move("e5d4") == "e5xd4"
     assert chess.get_piece("d4") == "p"
+    assert chess.result == ""
     
     chess = ChessLogic()
     chess.check_order = False
@@ -197,6 +208,7 @@ def test_pawn_captures():
     assert "d4" in chess.get_black_pawn_valid_moves("c5", "p")
     assert chess.play_move("c5d4") == "c5xd4"
     assert chess.get_piece("d4") == "p"
+    assert chess.result == ""
 
 def test_pawn_en_passant():
     """Test en passant capture for both pawns."""
@@ -210,6 +222,7 @@ def test_pawn_en_passant():
         assert chess.play_move(col+"4"+col+"5") == col+"4"+col+"5"
         assert chess.play_move(chr(ord(col) + 1)+"7"+chr(ord(col) + 1)+"5") == chr(ord(col) + 1)+"7"+chr(ord(col) + 1)+"5"
         assert chess.play_move(col+"5"+chr(ord(col) + 1)+"6") == col+"5"+'x'+chr(ord(col) + 1)+"6"
+        assert chess.result == ""   
     # check for left capture
     for col in ["b", "c", "d", "e", "f", "g", "h"]:
         chess = ChessLogic()
@@ -228,6 +241,7 @@ def test_pawn_en_passant():
         assert chess.play_move(col+"5"+col+"4") == col+"5"+col+"4"
         assert chess.play_move(chr(ord(col) + 1)+"2"+chr(ord(col) + 1)+"4") == chr(ord(col) + 1)+"2"+chr(ord(col) + 1)+"4"
         assert chess.play_move(col+"4"+chr(ord(col) + 1)+"3") == col+"4"+'x'+chr(ord(col) + 1)+"3"
+        assert chess.result == ""   
     # check for left capture
     for col in ["b", "c", "d", "e", "f", "g", "h"]:
         chess = ChessLogic()
@@ -236,6 +250,7 @@ def test_pawn_en_passant():
         assert chess.play_move(col+"5"+col+"4") == col+"5"+col+"4"
         assert chess.play_move(chr(ord(col) - 1)+"2"+chr(ord(col) - 1)+"4") == chr(ord(col) - 1)+"2"+chr(ord(col) - 1)+"4"
         assert chess.play_move(col+"4"+chr(ord(col) - 1)+"3") == col+"4"+'x'+chr(ord(col) - 1)+"3"
+        assert chess.result == ""   
         
     # Test invalid en passant attempts
     # check for right capture
@@ -247,6 +262,7 @@ def test_pawn_en_passant():
         assert chess.play_move(chr(ord(col) + 1)+"7"+chr(ord(col) + 1)+"5") == chr(ord(col) + 1)+"7"+chr(ord(col) + 1)+"5"
         assert chess.play_move("b1a3") == "nb1a3"
         assert chess.play_move(col+"5"+chr(ord(col) + 1)+"6") == ""
+        assert chess.result == ""   
     # check for left capture
     for col in ["b", "c", "d", "e", "f", "g", "h"]:
         chess = ChessLogic()
@@ -256,6 +272,7 @@ def test_pawn_en_passant():
         assert chess.play_move(chr(ord(col) - 1)+"7"+chr(ord(col) - 1)+"5") == chr(ord(col) - 1)+"7"+chr(ord(col) - 1)+"5"
         assert chess.play_move("b1a3") == "nb1a3"
         assert chess.play_move(col+"5"+chr(ord(col) - 1)+"6") == ""
+        assert chess.result == ""   
         
     # Test black capturing white via en passant
     # check for right capture
@@ -267,6 +284,7 @@ def test_pawn_en_passant():
         assert chess.play_move(chr(ord(col) + 1)+"2"+chr(ord(col) + 1)+"4") == chr(ord(col) + 1)+"2"+chr(ord(col) + 1)+"4"
         assert chess.play_move("b8a6") == "nb8a6"
         assert chess.play_move(col+"4"+chr(ord(col) + 1)+"3") == ""
+        assert chess.result == ""   
     # check for left capture
     for col in ["b", "c", "d", "e", "f", "g", "h"]:
         chess = ChessLogic()
@@ -276,37 +294,161 @@ def test_pawn_en_passant():
         assert chess.play_move(chr(ord(col) - 1)+"2"+chr(ord(col) - 1)+"4") == chr(ord(col) - 1)+"2"+chr(ord(col) - 1)+"4"
         assert chess.play_move("b8a6") == "nb8a6"
         assert chess.play_move(col+"4"+chr(ord(col) - 1)+"3") == ""
+        assert chess.result == ""   
 
 # Rook move validation tests
 def test_white_rook_valid_moves():
     """Test white rook movement validation."""
     chess = ChessLogic()
     chess.check_order = False
+    
+    # Test initial position moves (should be invalid)
     assert chess.play_move("a1a2") == ""
     assert chess.play_move("a1a3") == ""
     assert chess.play_move("a1b1") == ""
     assert chess.play_move("a1c1") == ""
+    assert chess.result == ""   
+    
+    # Move pawn to free rook
     assert chess.play_move("a2a4") == "a2a4"
-    assert chess.play_move("")
+    assert chess.result == ""   
     
+    # Test valid rook moves
+    assert chess.play_move("a1a2") == "ra1a2"
+    assert chess.play_move("a2a3") == "ra2a3"
+    assert chess.play_move("a3d3") == "ra3d3"
+    assert chess.play_move("d3d5") == "rd3d5"
+    assert chess.play_move("d5c5") == "rd5c5"
+    assert chess.play_move("c5c3") == "rc5c3"
+    assert chess.play_move("c3c2") == ""
+    assert chess.result == ""   
     
-    # Test horizontal and vertical movements
     # Test captures
-    # Test blocked paths
+    assert chess.play_move("c3c7") == "rc3xc7"
+    assert chess.result == ""   
+
+    chess = ChessLogic()
+    chess.check_order = False
     
+    # Test initial position moves (should be invalid due to being blocked)
+    assert chess.play_move("h1h2") == ""
+    assert chess.play_move("h1h3") == ""
+    assert chess.play_move("h1g1") == ""
+    assert chess.play_move("h1f1") == ""
+    assert chess.result == ""   
+    
+    # Move pawn to free rook
+    assert chess.play_move("h2h4") == "h2h4"
+    assert chess.result == ""   
+    
+    # Test valid rook moves
+    assert chess.play_move("h1h2") == "rh1h2"
+    assert chess.play_move("h2h3") == "rh2h3"
+    assert chess.play_move("h3e3") == "rh3e3"
+    assert chess.play_move("e3e5") == "re3e5"
+    assert chess.play_move("e5f5") == "re5f5"
+    assert chess.play_move("f5f3") == "rf5f3"
+    assert chess.play_move("f3f2") == ""  # Invalid move - blocked by own pawn
+    assert chess.result == ""   
+    
+    # Test captures
+    assert chess.play_move("f3f7") == "rf3xf7"  # Capture black pawn
+    assert chess.result == ""   
+
 
 def test_black_rook_valid_moves():
     """Test black rook movement validation."""
+    # Test left rook
     chess = ChessLogic()
-    # Similar tests as white rook
+    chess.check_order = False
+    
+    # Test initial position moves (should be invalid)
+    assert chess.play_move("a8a7") == ""
+    assert chess.play_move("a8a6") == ""
+    assert chess.play_move("a8b8") == ""
+    assert chess.play_move("a8c8") == ""
+    assert chess.result == ""   
+    
+    # Move pawn to free rook
+    assert chess.play_move("a7a5") == "a7a5"
+    assert chess.result == ""   
+    
+    # Test valid rook moves
+    assert chess.play_move("a8a7") == "ra8a7"
+    assert chess.play_move("a7a6") == "ra7a6"
+    assert chess.play_move("a6d6") == "ra6d6"
+    assert chess.play_move("d6d4") == "rd6d4"
+    assert chess.play_move("d4c4") == "rd4c4"
+    assert chess.play_move("c4c6") == "rc4c6"
+    assert chess.play_move("c6c7") == ""  # Invalid move - blocked by own pawn
+    assert chess.result == ""   
+    
+    # Test captures
+    assert chess.play_move("c6c2") == "rc6xc2"  # Capture white pawn
+    assert chess.result == ""   
+    
+    # Test right rook
+    chess = ChessLogic()
+    chess.check_order = False
+    
+    # Test initial position moves (should be invalid due to being blocked)
+    assert chess.play_move("h8h7") == ""
+    assert chess.play_move("h8h6") == ""
+    assert chess.play_move("h8g8") == ""
+    assert chess.play_move("h8f8") == ""
+    assert chess.result == ""   
+    
+    # Move pawn to free rook
+    assert chess.play_move("h7h5") == "h7h5"
+    assert chess.result == ""   
+    
+    # Test valid rook moves
+    assert chess.play_move("h8h7") == "rh8h7"
+    assert chess.play_move("h7h6") == "rh7h6"
+    assert chess.play_move("h6e6") == "rh6e6"
+    assert chess.play_move("e6e4") == "re6e4"
+    assert chess.play_move("e4f4") == "re4f4"
+    assert chess.play_move("f4f6") == "rf4f6"
+    assert chess.play_move("f6f7") == ""  # Invalid move - blocked by own pawn
+    assert chess.result == ""   
+    
+    # Test captures
+    assert chess.play_move("f6f2") == "rf6xf2"  # Capture white pawn
+    assert chess.result == ""   
 
 # Knight move validation tests
 def test_white_knight_valid_moves():
     """Test white knight movement validation."""
+    # Test left knight
     chess = ChessLogic()
-    # Test L-shaped moves
-    # Test edge cases (near board edges)
-    # Test captures
+    chess.check_order = False
+    
+    # Test initial valid moves
+    assert chess.play_move("b1c3") == "nb1c3"  # Move to center
+    assert chess.play_move("c3d5") == "nc3d5"  # Move forward
+    assert chess.play_move("d5e7") == "nd5xe7"  # Capture black pawn
+    assert chess.play_move("e7c6") == "ne7c6"  # Move to empty square
+    assert chess.play_move("c6e5") == "nc6e5"  # Another valid move
+    assert chess.result == ""   
+    
+    # Test right knight
+    chess = ChessLogic()
+    chess.check_order = False
+    
+    # Test initial valid moves
+    assert chess.play_move("g1f3") == "ng1f3"  # Move to center
+    assert chess.play_move("f3d4") == "nf3d4"  # Move forward
+    assert chess.play_move("d4e6") == "nd4e6"  # Capture black pawn
+    assert chess.play_move("e6c5") == "ne6c5"  # Move to empty square
+    assert chess.play_move("c5e4") == "nc5e4"  # Another valid move
+    assert chess.result == ""   
+    
+    # Test invalid moves (blocked by own pieces)
+    chess = ChessLogic()
+    chess.check_order = False
+    assert chess.play_move("b1d2") == ""  # Blocked by own pawn
+    assert chess.play_move("g1e2") == ""  # Blocked by own pawn
+    assert chess.result == ""   
 
 def test_black_knight_valid_moves():
     """Test black knight movement validation."""
@@ -371,6 +513,7 @@ def test_white_castling():
     assert chess.play_move("e1c1") == "0-0-0"
     assert chess.get_piece("c1") == "K"
     assert chess.get_piece("d1") == "R"
+    assert chess.result == ""   
     
     
     
